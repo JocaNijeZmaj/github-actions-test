@@ -24,8 +24,6 @@ jobs:
       - name: Set outputs
         id: vars
         run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-      - name: Check outputs
-        run: echo ${{ steps.vars.outputs.sha_short }}
       -
         name: Build and push
         uses: docker/build-push-action@v5
@@ -33,4 +31,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/action-test:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/action-test:${{ steps.vars.outputs.sha_short }}
