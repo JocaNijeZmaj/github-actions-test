@@ -25,7 +25,6 @@ jobs:
       -
         name: Build and push
         uses: docker/build-push-action@v5
-        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
         with:
           context: .
           file: ./Dockerfile
