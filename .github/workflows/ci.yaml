@@ -36,7 +36,7 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/action-test:latest
       - name: Create github release
         id: create_release
-        uses: actions/create/release@v1
+        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
