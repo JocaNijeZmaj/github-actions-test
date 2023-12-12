@@ -30,15 +30,15 @@ jobs:
           echo "VERSION_THOR=$VERSION_THOR" >> $GITHUB_ENV
           echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
-      - name: Build and push
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/action-test:${{ env.DOCKERFILE_VERSION }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/action-test:latest
+      # - name: Build and push
+      #   uses: docker/build-push-action@v5
+      #   with:
+      #     context: .
+      #     file: ./Dockerfile
+      #     push: true
+      #     tags: |
+      #       ${{ secrets.DOCKERHUB_USERNAME }}/action-test:${{ env.DOCKERFILE_VERSION }}
+      #       ${{ secrets.DOCKERHUB_USERNAME }}/action-test:latest
 
       - name: Create Release
         id: create_release
