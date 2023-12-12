@@ -8,8 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true
     steps:
       -
         name: Checkout
@@ -36,17 +34,12 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/action-test:${{ steps.vars.outputs.sha_short }}
             ${{ secrets.DOCKERHUB_USERNAME }}/action-test:latest
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      - name: Relese
+      - uses: CupOfTea696/gh-action-auto-release@v1.0.0
         with:
-          tag_name: v1.0.4
-          release_name: Release v1.0.4
-          body: |
-            Changes in this Release
-            - First Change
-            - Second Change
+          title: "Release: $version"
+          tag: "v1.0.5"
           draft: false
-          prerelease: false
+          regex: "/^Release: #{semver}$/i"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
