@@ -48,8 +48,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v1.0.4
-          release_name: Release v1.0.4
+          tag_name: v1.0.5
+          release_name: Release v1.0.5
           body: |
             Changes in this Release
             - Version Yes: ${{ env.VERSION_YES }}
