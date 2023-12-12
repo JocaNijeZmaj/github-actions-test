@@ -29,6 +29,8 @@ jobs:
           echo "VERSION_ODIN=$VERSION_ODIN" >> $GITHUB_ENV
           echo "VERSION_THOR=$VERSION_THOR" >> $GITHUB_ENV
           echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+          echo env.DOCKERFILE_VERSION
+          echo $GITHUB_ENV
 
       # - name: Build and push
       #   uses: docker/build-push-action@v5
@@ -40,19 +42,19 @@ jobs:
       #       ${{ secrets.DOCKERHUB_USERNAME }}/action-test:${{ env.DOCKERFILE_VERSION }}
       #       ${{ secrets.DOCKERHUB_USERNAME }}/action-test:latest
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ env.DOCKERFILE_VERSION }}
-          release_name: Release ${{ env.DOCKERFILE_VERSION }}
-          body: |
-            Changes in this Release
-            - Version Odin: ${{ env.VERSION_ODIN }}
-            - Version Thor: ${{ env.VERSION_THOR }}
-          draft: false
-          prerelease: false
+      # - name: Create Release
+      #   id: create_release
+      #   uses: actions/create-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: ${{ env.DOCKERFILE_VERSION }}
+      #     release_name: Release ${{ env.DOCKERFILE_VERSION }}
+      #     body: |
+      #       Changes in this Release
+      #       - Version Odin: ${{ env.VERSION_ODIN }}
+      #       - Version Thor: ${{ env.VERSION_THOR }}
+      #     draft: false
+      #     prerelease: false
 
 
