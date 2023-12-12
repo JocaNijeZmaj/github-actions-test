@@ -1,8 +1,5 @@
 name: ci
 
-env:
-  VERSION: v1.1.0
-
 on:
   push:
     branches:
@@ -14,14 +11,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Extract Dockerfile versions
-        id: extract_versions
-        run: |
-          VERSION_YES=$(grep 'LABEL version.yes' Dockerfile | awk -F"=" '{print $2}' | tr -d '"')
-          VERSION_NO=$(grep 'LABEL version.no' Dockerfile | awk -F"=" '{print $2}' | tr -d '"')
-          echo "::set-output name=VERSION_YES::$VERSION_YES"
-          echo "::set-output name=VERSION_NO::$VERSION_NO"
-
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -31,7 +20,16 @@ jobs:
         uses: docker/setup-buildx-action@v3
       - name: Set outputs
         id: vars
-        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        run: |
+          DOCKERFILE_VERSION=$(docker build --build-arg DOCKERFILE_VERSION=${DOCKERFILE_VERSION} -q .)
+          VERSION_ODIN=$(docker build --build-arg VERSION_ODIN=${VERSION_ODIN} -q .)
+          VERSION_THOR=$(docker build --build-arg VERSION_THOR=${VERSION_THOR} -q .)
+
+          echo "DOCKERFILE_VERSION=$DOCKERFILE_VERSION" >> $GITHUB_ENV
+          echo "VERSION_ODIN=$VERSION_ODIN" >> $GITHUB_ENV
+          echo "VERSION_THOR=$VERSION_THOR" >> $GITHUB_ENV
+          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
@@ -39,7 +37,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/action-test:${{ env.VERSION }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/action-test:${{ env.DOCKERFILE_VERSION }}
             ${{ secrets.DOCKERHUB_USERNAME }}/action-test:latest
 
       - name: Create Release
@@ -48,12 +46,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ env.VERSION }}
-          release_name: Release ${{ env.VERSION }}
+          tag_name: ${{ env.DOCKERFILE_VERSION }}
+          release_name: Release ${{ env.DOCKERFILE_VERSION }}
           body: |
             Changes in this Release
-            - Version Yes: ${{ inputs.VERSION_YES }}
-            - Version No: ${{ inputs.VERSION_NO }}
+            - Version Odin: ${{ env.VERSION_ODIN }}
+            - Version Thor: ${{ env.VERSION_THOR }}
           draft: false
           prerelease: false
 
