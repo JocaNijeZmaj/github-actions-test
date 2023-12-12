@@ -29,8 +29,10 @@ jobs:
           echo "VERSION_ODIN=$VERSION_ODIN" >> $GITHUB_ENV
           echo "VERSION_THOR=$VERSION_THOR" >> $GITHUB_ENV
           echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-          echo env.DOCKERFILE_VERSION
+          echo ${{ env.DOCKERFILE_VERSION }}
           echo $GITHUB_ENV
+          echo ${{ env.VERSION_THOR }}
+          echo ${{ env.VERSION_ODIN }}
 
       # - name: Build and push
       #   uses: docker/build-push-action@v5
